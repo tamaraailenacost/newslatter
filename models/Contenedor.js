@@ -26,9 +26,10 @@ class Contenedor {
      */
     save = async(object) => {
         try {
+            const read = await fs.readFileSync(this.data, 'utf8');
+            this.temp = JSON.parse(read);
             this.temp.push(object);
-            const newFile = await fs.promises.writeFile(this.data, JSON.stringify(this.temp, null, 2))
-            return newFile;
+            await fs.promises.writeFile(this.data, JSON.stringify(this.temp, null, 2));
         } catch (error) {
             console.log(error);
             throw new Error;
@@ -67,17 +68,16 @@ class Contenedor {
      */
     deleteById = async(id) => {
 
-        if (!this.getById(id)) {
-            console.log("no hay id")
-            return 'no se encuentra el id';
-        }
-        const filtered = this.temp.filter(elemento => {
-            return elemento.id !== id;
-        });
         try {
+            if (!this.getById(id)) {
+                return { message: 'no se encuentra el id' };
+            }
+            const filtered = this.temp.filter(elemento => {
+                return elemento.id !== id;
+            });
             await fs.promises.writeFile(this.data, JSON.stringify(filtered, null, 2));
-            console.log("exito")
             return `${id} fue  eliminado del archivo.`;
+
         } catch (error) {
             console.log(error);
             throw new Error;

@@ -1,7 +1,8 @@
 const express = require('express');
 
 //imports
-const routerTesting = require('../routers/tester')
+const routerTesting = require('../routers/tester');
+const routerProducts = require('../routers/productos');
 
 
 class Server {
@@ -19,13 +20,15 @@ class Server {
 
     middlewares = () => {
 
+        this.app.use(express.json());
         this.app.use(express.static('public'));
 
     }
 
     routes = () => {
 
-        this.app.use('/api', routerTesting);
+        this.app.use('/api/testing', routerTesting);
+        this.app.use('/api/productos', routerProducts);
     }
 
 
